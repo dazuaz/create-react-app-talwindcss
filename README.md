@@ -46,17 +46,17 @@ We replace scripts per craco documentation, and add prebuild/prestart tailwind, 
 TODO: If you change tailwind.src.css you need to restart the dev server (calls _tailwind build ..._)
 
 ```json
-    /** Modify scrips to include craco ./package.json */
-    ...
-    "scripts": {
-        "start": "craco start",
-        "build": "craco build",
-        "test": "craco test",
-        "prestart": "npm run build:tailwind",
-        "prebuild": "npm run build:tailwind",
-        "build:tailwind": "tailwind build ./src/tailwind.src.css -o ./src/tailwind.css"
-    },
-    ...
+/** Modify scrips to include craco ./package.json */
+...
+"scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "prestart": "npm run build:tailwind",
+    "prebuild": "npm run build:tailwind",
+    "build:tailwind": "tailwind build ./src/tailwind.src.css -o ./src/tailwind.css"
+},
+...
 ```
 
 #### tailwind.src.css
