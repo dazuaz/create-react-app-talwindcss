@@ -73,11 +73,15 @@ Don't purge tailwindcss global defaults.
 @tailwind utilities;
 ```
 
-```javascript
-    // ./src/index.js
+#### index.js
 
-    import "./tailwind.css"
-    ...
+Load the CSS file to your project.
+
+```javascript
+// ./src/index.js
+
+import "./tailwind.css"
+...
 ```
 
 ## Summary
