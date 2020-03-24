@@ -12,58 +12,80 @@ Create React App already comes with PostCSS optimized configuration via [react-s
     npm install tailwindcss @fullhuman/postcss-purgecss @craco/craco
     npx tailwindcss init
 
-Configs:
+### Add/Edit the folling files
 
-    // craco.conifg.js
+#### craco.conifg.js
 
-    const { whenProd } = require("@craco/craco")
-    const purgecss = require("@fullhuman/postcss-purgecss")({
-      // Adjust if typescript or jsx
-      content: ["./src/**/*.js", "./public/index.html"],
-      // regex from tailwnid docs
-      defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || [],
-    })
-    const tailwindcss = require("tailwindcss")
+Craco config file, we **_extend_** CRA postcss configs by adding TailwindCSS and PurgeCSS to the already present PostCSS config(it has autoprefixer and honors the browserlist package.json settings).
 
-    module.exports = {
-      style: {
-        postcss: {
-          plugins: [tailwindcss, ...whenProd(() => [purgecss], [])],
-        },
-      },
+```javascript
+/** ./craco.conifg.js */
+
+const { whenProd } = require("@craco/craco");
+const tailwindcss = require("tailwindcss");
+const purgecss = require("@fullhuman/postcss-purgecss")({
+  // Adjust if typescript or jsx
+  content: ["./src/**/*.js", "./public/index.html"],
+  // regex from tailwnid-ui docs
+  defaultExtractor: content => content.match(/[\w-/.:]+(?<!:)/g) || []
+});
+
+module.exports = {
+  style: {
+    postcss: {
+      plugins: [tailwindcss, ...whenProd(() => [purgecss], [])]
     }
+  }
+};
+```
 
-    // package.json
+#### package.json
+
+We replace scripts per craco documentation, and add prebuild/prestart tailwind, this reads your custom tailwind.config.js file and builds tailwind.css output file, then PurgeCSS deletes what you don't use.
+
+TODO: If you change tailwind.src.css you need to restart the dev server (calls _tailwind build ..._)
+
+```json
+    /** Modify scrips to include craco ./package.json */
     ...
     "scripts": {
-        "prestart": "npm run build:tailwind",
         "start": "craco start",
-        "prebuild": "npm run build:tailwind",
         "build": "craco build",
-        "build:tailwind": "tailwind build ./src/tailwind.src.css -o ./src/tailwind.css",
-        "test": "craco test"
+        "test": "craco test",
+        "prestart": "npm run build:tailwind",
+        "prebuild": "npm run build:tailwind",
+        "build:tailwind": "tailwind build ./src/tailwind.src.css -o ./src/tailwind.css"
     },
+    ...
+```
 
+#### tailwind.src.css
 
-    // tailwind.src.css
+Don't purge tailwindcss global defaults.
 
-    /* purgecss start ignore */
-    @tailwind base;
-    @tailwind components;
-    /* purgecss end ignore */
-    @tailwind utilities;
+```css
+/* ./src/tailwind.src.css */
 
+/* purgecss start ignore */
+@tailwind base;
+@tailwind components;
+/* purgecss end ignore */
+@tailwind utilities;
+```
+
+```javascript
     // ./src/index.js
 
     import "./tailwind.css"
     ...
+```
 
-## Sumary
+## Summary
 
 - Include PurgeCSS and tailwindcss as PostCSS _plugins_ via extending postcss craco.config.js
   - If needed Adjust file search pattern i.e. add .jsx or .ts
 - Import TailwindCSS output css file to your project
-  - Run npx tailwindcss init to create and empty tailwind config file
+  - Run _npx tailwindcss init_ to create an empty tailwind config file
   - Create tailwind.src.css with default directives
   - Import the built tailwind.css file to your project
 - Update scripts of package.json
