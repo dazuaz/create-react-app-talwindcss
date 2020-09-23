@@ -7,6 +7,7 @@ module.exports = {
     postcss: {
       plugins: [
         tailwindcss,
+        // recreate CRA original postcss config
         postcssPresetEnv({
           autoprefixer: {
             flexbox: "no-2009",

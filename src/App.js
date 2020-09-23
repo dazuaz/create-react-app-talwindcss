@@ -6,7 +6,7 @@ const App = () => (
     <header className='flex flex-col justify-center items-center bg-gray-900 min-h-screen text-center'>
       <img
         src={logo}
-        className='pointer-events-none animate-spin'
+        className='pointer-events-none animate-spin-slow'
         style={{ height: "40vmin" }}
         alt='logo'
       />
